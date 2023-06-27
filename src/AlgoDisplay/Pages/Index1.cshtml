@@ -1,0 +1,32 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">算法展示网页</h1>
+    @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    <!-- Single statement block -->
+    <a href="https://www.cfmee.cn/">
+        <img class="img-fluid" src="~/images/CFMEE.png" width="600" height="300" />
+    </a>
+    @{
+        var myMessage = "欢迎进入芯碁微装算法展示页面";
+        string str = System.Environment.CurrentDirectory;
+    }
+
+    <!-- Inline expression or variable -->
+    <p> @myMessage
+    @str</p>
+
+    <!-- Multi-statement block -->
+    @{
+        var greeting = "Welcome to our site!";
+        var weekDay = DateTime.Now.DayOfWeek;
+        var greetingMessage = greeting + " 今天合肥是: " + weekDay;
+    }
+    <p>The greeting is: @greetingMessage</p>
+
+</div>
+

@@ -1,0 +1,291 @@
+﻿@page
+@model AlgoDisplay.Pages.Algorithm.IndexModel
+@{
+}
+
+<div class="mt-5">
+    <button onclick="topFunction()" id="myBtn" title="回到顶部" class="bg-primary btn-sm fs-3"> &Hat; </button>
+    <!-- 选择算法与图片，按钮 -->
+    <h1 class="text-center mb-5">算法展示v2</h1>
+    <form method="post" enctype="multipart/form-data" class="bg-light">
+        <div class=" justify-content-sm-between">
+            <div for="algorithm" class="form-control text-black col-md-2 col-12 text-center">
+                选择算法：
+                <select name="algorithm" id="algorithm">
+                    <option value="default">请选择算法</option>
+                    <option value="algorithm1">算法1</option>
+                    <option value="algorithm2">算法2</option>
+                    <option value="algorithm3">算法3</option>
+                    <option value="algorithm4">算法4</option>
+                </select>
+@*                <span>
+                    根目录为 @ViewData["webRootPath"]
+                 </span>*@
+                <label class="ms-5" for="image">上传图片：</label>
+                <input class="col-3 align-self-sm-start" type="file" name="image" id="image" accept="image/jpeg, image/gif, image/png" onchange="showImg(this)">
+                <input type="submit" class="btn btn-primary text-white col-lg-2 col-md-4 col-sm-5 col-11 me-md-3 mb-sm-0 mb-1" value="运行" onclick="runAlgorithm()">
+                <input type="button" class="btn btn-secondary text-white col-lg-2 col-md-4 col-sm-5 col-11" value="重置" onclick="resetForm()">
+               @* <button type="reset" class="btn btn-secondary text-white col-lg-2 col-md-4 col-sm-5 col-11">重置</button>*@
+            </div>
+        </div>
+    </form>
+
+    <!-- 参数与算法简介 -->
+         <div class="mb-3 d-flex">
+            <div class="card  bg-light w-100 d-flex">
+                <div class="fs-3 fw-bolder card-header text-black text-center">
+                    输入参数
+                </div>
+
+                 @*asp-page表单提交到后端*@
+                 <form class="algorithm-parameter" id="parameter-container" method="post" asp-page="/Algorithm/Index">
+                    <div class="card-body bg-light d-flex align-items-center">
+                            请选择算法以输入相应参数。
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="card border-info w-100 d-flex">
+                <div class="fs-3 fw-bolder card-header text-black text-center">
+                    算法简介
+                </div>
+			<div class="algorithm-description card-body d-flex align-items-center text-info">
+                            请选择一个算法查看相应简介。
+                    </div>
+            </div>
+        </div>
+
+     <!-- 图片区域 -->
+    <div class="row mt-3" style="min-height: 50vh;">
+        <div class="col-md-6 mb-3 d-flex">
+            <div class="card w-100">
+                <div class="card-header bg-warning text-white text-center">
+                    原图
+                </div>
+                <div class="card-body bg-light d-flex align-items-center">
+                    <div class="original-image">
+                        @*由于调用yolo_test会自动刷新页面，所以当输出为空时，输入图片展示灰图；当输出框为处理后的图片时，输入图片为上传图*@
+                        @{
+                            if (!string.IsNullOrEmpty(ViewData["ProcessedImageUrl"] as string))
+                            {
+                                ViewData["OriginalImageUrl"] = "/images/original.jpg";
+                            }
+
+                            else
+                            {
+                                ViewData["OriginalImageUrl"] = "/icons/grey.jpg";
+                            }
+                        }
+                            <img id="upload" src="@ViewData["OriginalImageUrl"]" alt="初始图片" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3 d-flex">
+            <div class="card w-100">
+                <div class="card-header bg-warning text-white text-center">
+                    处理后
+                </div>
+                <div class="card-body bg-light d-flex align-items-center">
+                    <div class="processed-image">
+                        @*<img id="process" src="~/icon/grey.jpg" alt="处理后的图片" class="img-fluid">*@
+                        
+                        @if (!string.IsNullOrEmpty(ViewData["OriginalImageUrl"] as string))
+                        {
+                            <img id="process" src="@ViewData["OriginalImageUrl"]" alt="处理后的图片" class="img-fluid">
+                        }
+                          @*<img id="process" src="~/AlgoDisplay/result.jpg" alt="处理后的图片" class="img-fluid">*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- 算法介绍 -->
+  <section id="Introductions" class="bg-light mt-5 py-5">
+    <div class="container-md">
+      <div class="text-center">
+        <h2>算法介绍</h2>
+        <p class="lead text-muted">以下是对算法的详细介绍</p>
+      </div>
+      <div class="row my-3 g-5 justify-content-around align-items-center">
+        <div class="col-6 col-lg-4">
+             <img src="~/icons/Software.jpg" class="img-fluid" alt="software">
+        </div>
+        <div class="col-lg-6">
+
+          <!-- accordion -->
+          <div class="accordion" id="chapters">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#algo-1" aria-expanded="true" aria-controls="algo-1">
+                  Algorithm 1 - *****************
+                </button>
+              </h2>
+              <div id="algo-1" class="accordion-collapse collapse show" aria-labelledby="heading-1" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-2" aria-expanded="false" aria-controls="algo-2">
+                  Algorithm 2 - *****************
+                </button>
+              </h2>
+              <div id="algo-2" class="accordion-collapse collapse" aria-labelledby="heading-2" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-3" aria-expanded="false" aria-controls="algo-3">
+                  Algorithm 3 - *****************
+                </button>
+              </h2>
+              <div id="algo-3" class="accordion-collapse collapse" aria-labelledby="heading-3" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-4">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-4" aria-expanded="false" aria-controls="algo-4">
+                  Algorithm 4 - *****************
+                </button>
+              </h2>
+              <div id="algo-4" class="accordion-collapse collapse" aria-labelledby="heading-4" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-5">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-5" aria-expanded="false" aria-controls="algo-5">
+                  Algorithm 5 - *****************
+                </button>
+              </h2>
+              <div id="algo-5" class="accordion-collapse collapse" aria-labelledby="heading-5" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-6">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-6" aria-expanded="false" aria-controls="algo-6">
+                  Algorithm 6 - *****************
+                </button>
+              </h2>
+              <div id="algo-6" class="accordion-collapse collapse" aria-labelledby="heading-6" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-7">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-7" aria-expanded="false" aria-controls="algo-7">
+                  Algorithm 7 - *****************
+                </button>
+              </h2>
+              <div id="algo-7" class="accordion-collapse collapse" aria-labelledby="heading-7" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-8">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-8" aria-expanded="false" aria-controls="algo-8">
+                  Algorithm 8 - *****************
+                </button>
+              </h2>
+              <div id="algo-8" class="accordion-collapse collapse" aria-labelledby="heading-8" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-9">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-9" aria-expanded="false" aria-controls="algo-9">
+                  Algorithm 9 - *****************
+                </button>
+              </h2>
+              <div id="algo-9" class="accordion-collapse collapse" aria-labelledby="heading-9" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-10">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-10" aria-expanded="false" aria-controls="algo-10">
+                  Algorithm 10 - *****************
+                </button>
+              </h2>
+              <div id="algo-10" class="accordion-collapse collapse" aria-labelledby="heading-10" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-11">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-11" aria-expanded="false" aria-controls="algo-11">
+                  Algorithm 11 - *****************
+                </button>
+              </h2>
+              <div id="algo-11" class="accordion-collapse collapse" aria-labelledby="heading-11" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="heading-12">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#algo-12" aria-expanded="false" aria-controls="algo-12">
+                  Algorithm 12 - *****************
+                </button>
+              </h2>
+              <div id="algo-12" class="accordion-collapse collapse" aria-labelledby="heading-12" data-bs-parent="#chapters">
+                <div class="accordion-body">
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quis assumenda delectus sapiente quidem consequatur odit adipisci necessitatibus nemo aliquid minus modi tempore quibusdam quas vitae, animi ipsam nulla sunt alias.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
