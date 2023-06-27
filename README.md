@@ -14,4 +14,4 @@ Visual Studio 2022
 Windows 11
 
 ## 4. 演示效果
-![](https://git.local/algorithm_show/algo_show/-/raw/main/doc/mdPhotos/20230608-111506.gif)
+![](https://github.com/Glostyear/AlgoDisplay/blob/main/doc/mdPhotos/20230608-111506.gif?raw=true)
